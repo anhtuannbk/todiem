@@ -77,7 +77,7 @@ def add_grade_to_pdf(input_pdf, output_pdf, grades, absent_count, total_students
     pdf_writer = PdfWriter()
 
     # Đăng ký font
-    pdfmetrics.registerFont(TTFont('arial', 'arial.ttf'))
+    pdfmetrics.registerFont(TTFont('arial', '/content/todiem/arial.ttf'))
 
     grade_column = find_grade_column(input_pdf)
     if grade_column is None:
