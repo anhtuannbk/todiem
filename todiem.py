@@ -216,7 +216,7 @@ def main():
                 
                 if new_file_name != file_name:
                     new_file_path = os.path.join(current_dir, new_file_name)
-                    os.rename(file_path, new_file_Path)
+                    os.rename(file_path, new_file_path)
                     print(f"Đã đổi tên: {file_name} thành {new_file_name}")
     
     # Xử lý các file
