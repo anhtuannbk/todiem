@@ -217,7 +217,6 @@ def main():
                 if new_file_name != file_name:
                     new_file_path = os.path.join(current_dir, new_file_name)
                     os.rename(file_path, new_file_path)
-                    print(f"Đã đổi tên: {file_name} thành {new_file_name}")
     
     # Xử lý các file
     for keyword in ['qt', 'gk', 'ck']:
@@ -229,7 +228,6 @@ def main():
         if (file.endswith('.pdf') and 'output' not in file.lower()) or \
            file.endswith('.xlsx'):
             os.remove(file_path)
-            print(f"Đã xóa file: {file}")
 
 if __name__ == "__main__":
     main()
