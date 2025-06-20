@@ -221,6 +221,44 @@ def main():
     # Xử lý các file
     for keyword in ['qt', 'gk', 'ck']:
         process_files(current_dir, keyword, info)
+
+
+    import os
+    from pypdf import PdfReader, PdfWriter, Transformation
+    
+    # Scale factor
+    scale = 0.99
+    
+    # Lặp qua tất cả các file PDF trong thư mục
+    for filename in os.listdir():
+        if filename.endswith(".pdf"):
+            reader = PdfReader(filename)
+            writer = PdfWriter()
+    
+            for page in reader.pages:
+                # Áp dụng phép biến đổi scale (thu nhỏ trang lại)
+                transformation = Transformation().scale(sx=scale, sy=scale)
+                page.add_transformation(transformation)
+                writer.add_page(page)
+    
+            # Tạo tên file mới
+            new_filename = f"scaled_{filename}"
+            with open(new_filename, "wb") as f_out:
+                writer.write(f_out)
+    
+            print(f"Đã tạo: {new_filename}")
+    import zipfile
+    import os
+    
+    # Tạo file zip mới chứa các file bắt đầu bằng scaled_
+    with zipfile.ZipFile("scaled_pdfs.zip", "w") as zipf:
+        for file in os.listdir():
+            if file.startswith("scaled_") and file.endswith(".pdf"):
+                zipf.write(file)
+    
+    # Tải file zip về
+    from google.colab import files
+    files.download("scaled_pdfs.zip")
     
     # Xóa file không cần thiết
     for file in os.listdir(current_dir):
