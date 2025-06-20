@@ -100,10 +100,10 @@ def add_grade_to_pdf(input_pdf, output_pdf, grades, total_students, info):
         if page_num == 0:
             can.drawString(125, 93.5, f"{total_students}")
             can.drawString(125, 75, f"{absent_count}")
-            can.drawCentredString(380, 52, f"{info['supervisor1']}")
-            can.drawCentredString(380, 15, f"{info['supervisor2']}")
-            can.drawCentredString(505, 52, f"{info['grader1']}")
-            can.drawCentredString(505, 15, f"{info['grader2']}")
+            can.drawCentredString(380, 49, f"{info['supervisor1']}")
+            can.drawCentredString(380, 18, f"{info['supervisor2']}")
+            can.drawCentredString(505, 49, f"{info['grader1']}")
+            can.drawCentredString(505, 18, f"{info['grader2']}")
         
         for ma_sv_pdf, position in student_positions.items():
             if position[2] - 1 != page_num:
