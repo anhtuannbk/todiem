@@ -227,7 +227,7 @@ def main():
     scale = 0.99
 
     for filename in os.listdir():
-        if filename.endswith(".pdf"):
+        if filename.endswith(".pdf") and "output" in filename:
             reader = PdfReader(filename)
             writer = PdfWriter()
 
@@ -249,10 +249,11 @@ def main():
             if file.startswith("scaled_") and file.endswith(".pdf"):
                 zipf.write(file)
 
+    
     # Xóa file không cần thiết
     for file in os.listdir(current_dir):
         file_path = os.path.join(current_dir, file)
-        if (file.endswith('.pdf') and 'output' not in file.lower()) or \
+        if (file.endswith('.pdf') and 'scaled' not in file.lower()) or \
            file.endswith('.xlsx'):
             os.remove(file_path)
 
