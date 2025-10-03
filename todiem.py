@@ -88,7 +88,8 @@ def add_grade_to_pdf(input_pdf, output_pdf, grades, total_students, info):
     # Tính số sinh viên vắng dựa trên mã SV trong PDF và điểm NaN
     absent_count = sum(1 for ma_sv in student_positions if ma_sv in grades and pd.isna(grades[ma_sv]))
     print(f"Số lượng sinh viên vắng trong bảng điểm PDF: {absent_count}")
-    
+    # Tính số số SV dự thi
+    present_count = total_students - absent_count
     total_pages = len(pdf_reader.pages)
     for page_num in range(total_pages):
         page = pdf_reader.pages[page_num]
@@ -98,7 +99,7 @@ def add_grade_to_pdf(input_pdf, output_pdf, grades, total_students, info):
         
         # Thêm thông tin tổng số sinh viên và cán bộ vào trang đầu tiên
         if page_num == 0:
-            can.drawString(125, 93.5, f"{total_students}")
+            can.drawString(125, 93.5, f"{present_count}")
             can.drawString(125, 75, f"{absent_count}")
             can.drawCentredString(380, 49, f"{info['supervisor1']}")
             can.drawCentredString(380, 18, f"{info['supervisor2']}")
