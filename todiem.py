@@ -33,7 +33,6 @@ def load_excel_data(excel_path):
         # In ra để kiểm tra
         print(f"Số lượng sinh viên trong file Excel: {len(grades)}")
         if len(grades) > 0:
-            print(f"Ví dụ mã SV sau khi chuẩn hóa (Excel): {list(grades.keys())[0]}")
             
         return grades
     except Exception as e:
@@ -171,7 +170,6 @@ def add_grade_to_pdf(input_pdf, output_pdf, grades, total_students, info):
     try:
         with open(output_pdf, "wb") as output_file:
             pdf_writer.write(output_file)
-        print(f"Hoàn thành! Kiểm tra file {output_pdf}")
     except Exception as e:
         print(f"Lỗi khi ghi file PDF: {str(e)}")
 
@@ -258,8 +256,6 @@ def main():
             new_filename = f"scaled_{filename}"
             with open(new_filename, "wb") as f_out:
                 writer.write(f_out)
-
-            print(f"Đã tạo: {new_filename}")
 
     from PyPDF2 import PdfMerger # Dòng này để lại hoặc đưa lên đầu file cũng được, nhưng ở đây không gây lỗi biến os.
     
