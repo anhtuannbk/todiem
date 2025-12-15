@@ -255,7 +255,7 @@ def main():
     for file in os.listdir(current_dir):
         file_path = os.path.join(current_dir, file)
         if (file.endswith('.pdf') and 'scaled' not in file.lower()) or \
-           file.endswith('.xlsx'):
+           file.endswith('qt.xlsx') and file.endswith('gk.xlsx') and file.endswith('ck.xlsx'):
             os.remove(file_path)
 
 if __name__ == "__main__":
