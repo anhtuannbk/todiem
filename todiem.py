@@ -14,9 +14,32 @@ import re
 def load_excel_data(excel_path):
     try:
         df = pd.read_excel(excel_path)
-        df['Mã SV'] = df['Mã SV'].astype(str).str.strip()
+        
+        # --- BẮT ĐẦU ĐOẠN SỬA ---
+        def chuan_hoa_mssv(value):
+            try:
+                # Nếu là NaN/None
+                if pd.isna(value): return ""
+                
+                # Ép về float trước (xử lý cả trường hợp int, float, str dạng số)
+                # Sau đó ép về int để cắt bỏ phần thập phân (.0)
+                # Cuối cùng ép về str
+                return str(int(float(value)))
+            except:
+                # Nếu không thể ép kiểu số (vd: mã có chữ cái), chỉ cắt khoảng trắng
+                return str(value).strip()
+
+        # Áp dụng hàm chuẩn hóa cho cột Mã SV
+        df['Mã SV'] = df['Mã SV'].apply(chuan_hoa_mssv)
+        # --- KẾT THÚC ĐOẠN SỬA ---
+
         grades = dict(zip(df['Mã SV'], df['Điểm']))
+        
+        # In ra để kiểm tra
         print(f"Số lượng sinh viên trong file Excel: {len(grades)}")
+        if len(grades) > 0:
+            print(f"Ví dụ mã SV sau khi chuẩn hóa (Excel): {list(grades.keys())[0]}")
+            
         return grades
     except Exception as e:
         print(f"Lỗi khi đọc file Excel: {str(e)}")
@@ -242,14 +265,39 @@ def main():
                 writer.write(f_out)
 
             print(f"Đã tạo: {new_filename}")
-    import zipfile
-    
-    # Tạo file zip mới chứa các file bắt đầu bằng scaled_
-    with zipfile.ZipFile("scaled_pdfs.zip", "w") as zipf:
-        for file in os.listdir():
-            if file.startswith("scaled_") and file.endswith(".pdf"):
-                zipf.write(file)
 
+    # @title Ghép thành 1 file pdf (qt, gk, ck nếu có)
+    import os
+    import glob
+    from PyPDF2 import PdfMerger
+    
+    # Thư mục chứa các file PDF
+    input_folder = "."
+    
+    # Lấy danh sách file PDF có dạng scaled_output_*
+    all_pdfs = glob.glob(os.path.join(input_folder, "scaled_output_*.pdf"))
+    
+    # Tách thành 3 nhóm: qt, gk, ck
+    qt_files = sorted([f for f in all_pdfs if "qt" in os.path.basename(f).lower()])
+    gk_files = sorted([f for f in all_pdfs if "gk" in os.path.basename(f).lower()])
+    ck_files = sorted([f for f in all_pdfs if "ck" in os.path.basename(f).lower()])
+    
+    # Ghép theo thứ tự: qt → gk → ck
+    pdf_files = qt_files + gk_files + ck_files
+    
+    # Chỉ ghép nếu có ít nhất 1 file
+    if pdf_files:
+        merger = PdfMerger()
+        for pdf in pdf_files:
+            merger.append(pdf)
+    
+        output_file = "merged_qt_gk_ck.pdf"
+        merger.write(output_file)
+        merger.close()
+    
+        print(f"Đã ghép {len(pdf_files)} file (qt → gk → ck) thành: {output_file}")
+    else:
+        print("Không tìm thấy file nào để ghép!")
     
     # Xóa file không cần thiết
     for file in os.listdir(current_dir):
