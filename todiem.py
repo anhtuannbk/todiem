@@ -306,7 +306,7 @@ def main():
         # --- LƯU Ý LOGIC XÓA FILE (Tôi đã sửa lại giúp bạn chỗ logic AND vô lý) ---
         # Logic cũ của bạn: file.endswith('qt.xlsx') AND file.endswith('gk.xlsx')... -> Không bao giờ xảy ra
         # Logic sửa: Dùng OR để xóa các file tạm
-        is_temp_pdf = (file.endswith('.pdf') and 'scaled' not in file.lower() and file != "merged_qt_gk_ck.pdf")
+        is_temp_pdf = (file.endswith('.pdf') and file != "merged_qt_gk_ck.pdf")
         is_temp_xlsx = (file.endswith('grade_qt.xlsx') or file.endswith('grade_gk.xlsx') or file.endswith('grade_ck.xlsx'))
         
         if is_temp_pdf or is_temp_xlsx:
