@@ -21,17 +21,12 @@ def load_excel_data(excel_path):
                 # Nếu là NaN/None
                 if pd.isna(value): return ""
                 
-                # Ép về float trước (xử lý cả trường hợp int, float, str dạng số)
-                # Sau đó ép về int để cắt bỏ phần thập phân (.0)
-                # Cuối cùng ép về str
                 return str(int(float(value)))
             except:
-                # Nếu không thể ép kiểu số (vd: mã có chữ cái), chỉ cắt khoảng trắng
                 return str(value).strip()
 
         # Áp dụng hàm chuẩn hóa cho cột Mã SV
         df['Mã SV'] = df['Mã SV'].apply(chuan_hoa_mssv)
-        # --- KẾT THÚC ĐOẠN SỬA ---
 
         grades = dict(zip(df['Mã SV'], df['Điểm']))
         
@@ -266,15 +261,10 @@ def main():
 
             print(f"Đã tạo: {new_filename}")
 
-    # @title Ghép thành 1 file pdf (qt, gk, ck nếu có)
-    # --- ĐÃ XÓA IMPORT OS, GLOB Ở ĐÂY ---
     from PyPDF2 import PdfMerger # Dòng này để lại hoặc đưa lên đầu file cũng được, nhưng ở đây không gây lỗi biến os.
     
     # Thư mục chứa các file PDF
     input_folder = "."
-    
-    # Lấy danh sách file PDF có dạng scaled_output_*
-    # Lưu ý: glob đã import ở đầu file rồi, nên dùng glob.glob bình thường
     all_pdfs = glob(os.path.join(input_folder, "scaled_output_*.pdf")) 
     
     # Tách thành 3 nhóm: qt, gk, ck
@@ -299,17 +289,12 @@ def main():
     else:
         print("Không tìm thấy file nào để ghép!")
     
-    # Xóa file không cần thiết
+    # Xóa file không cần thiết (Dọn dẹp)
     for file in os.listdir(current_dir):
         file_path = os.path.join(current_dir, file)
-        
-        # --- LƯU Ý LOGIC XÓA FILE (Tôi đã sửa lại giúp bạn chỗ logic AND vô lý) ---
-        # Logic cũ của bạn: file.endswith('qt.xlsx') AND file.endswith('gk.xlsx')... -> Không bao giờ xảy ra
-        # Logic sửa: Dùng OR để xóa các file tạm
-        is_temp_pdf = (file.endswith('.pdf') and file != "merged_qt_gk_ck.pdf")
-        is_temp_xlsx = (file.endswith('grade_qt.xlsx') or file.endswith('grade_gk.xlsx') or file.endswith('grade_ck.xlsx'))
-        
-        if is_temp_pdf or is_temp_xlsx:
+        is_temp_xlsx = file in ['grade_qt.xlsx', 'grade_gk.xlsx', 'grade_ck.xlsx']
+        is_temp_pdf = (file.startswith("output_") or file.startswith("scaled_")) and file.endswith(".pdf")
+        if is_temp_xlsx or is_temp_pdf:
             try:
                 os.remove(file_path)
             except:
