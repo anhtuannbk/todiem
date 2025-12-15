@@ -267,15 +267,15 @@ def main():
             print(f"Đã tạo: {new_filename}")
 
     # @title Ghép thành 1 file pdf (qt, gk, ck nếu có)
-    import os
-    import glob
-    from PyPDF2 import PdfMerger
+    # --- ĐÃ XÓA IMPORT OS, GLOB Ở ĐÂY ---
+    from PyPDF2 import PdfMerger # Dòng này để lại hoặc đưa lên đầu file cũng được, nhưng ở đây không gây lỗi biến os.
     
     # Thư mục chứa các file PDF
     input_folder = "."
     
     # Lấy danh sách file PDF có dạng scaled_output_*
-    all_pdfs = glob.glob(os.path.join(input_folder, "scaled_output_*.pdf"))
+    # Lưu ý: glob đã import ở đầu file rồi, nên dùng glob.glob bình thường
+    all_pdfs = glob(os.path.join(input_folder, "scaled_output_*.pdf")) 
     
     # Tách thành 3 nhóm: qt, gk, ck
     qt_files = sorted([f for f in all_pdfs if "qt" in os.path.basename(f).lower()])
@@ -302,9 +302,18 @@ def main():
     # Xóa file không cần thiết
     for file in os.listdir(current_dir):
         file_path = os.path.join(current_dir, file)
-        if (file.endswith('.pdf') and 'scaled' not in file.lower()) or \
-           file.endswith('qt.xlsx') and file.endswith('gk.xlsx') and file.endswith('ck.xlsx'):
-            os.remove(file_path)
+        
+        # --- LƯU Ý LOGIC XÓA FILE (Tôi đã sửa lại giúp bạn chỗ logic AND vô lý) ---
+        # Logic cũ của bạn: file.endswith('qt.xlsx') AND file.endswith('gk.xlsx')... -> Không bao giờ xảy ra
+        # Logic sửa: Dùng OR để xóa các file tạm
+        is_temp_pdf = (file.endswith('.pdf') and 'scaled' not in file.lower() and file != "merged_qt_gk_ck.pdf")
+        is_temp_xlsx = (file.endswith('grade_qt.xlsx') or file.endswith('grade_gk.xlsx') or file.endswith('grade_ck.xlsx'))
+        
+        if is_temp_pdf or is_temp_xlsx:
+            try:
+                os.remove(file_path)
+            except:
+                pass
 
 if __name__ == "__main__":
-main()
+    main()
