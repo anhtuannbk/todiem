@@ -307,4 +307,4 @@ def main():
             os.remove(file_path)
 
 if __name__ == "__main__":
-    main()
+main()
