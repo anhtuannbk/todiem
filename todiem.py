@@ -237,8 +237,6 @@ def main():
     # Xử lý các file
     for keyword in ['qt', 'gk', 'ck']:
         process_files(current_dir, keyword, info)
-
-    
     # Scale factor
     scale = 0.99
 
@@ -256,7 +254,7 @@ def main():
             with open(new_filename, "wb") as f_out:
                 writer.write(f_out)
 
-    from PyPDF2 import PdfMerger # Dòng này để lại hoặc đưa lên đầu file cũng được, nhưng ở đây không gây lỗi biến os.
+    from PyPDF2 import PdfMerger
     
     # Thư mục chứa các file PDF
     input_folder = "."
