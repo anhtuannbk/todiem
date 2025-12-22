@@ -32,9 +32,8 @@ def load_excel_data(excel_path):
         
         # In ra để kiểm tra
         print(f"Số lượng sinh viên trong file Excel: {len(grades)}")
-        if len(grades) > 0:
-            
-        return grades
+        if len(grades) > 0:     
+            return grades
     except Exception as e:
         print(f"Lỗi khi đọc file Excel: {str(e)}")
         return None
